@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="ugv_gazebo">
+
+  
+  <xacro:include filename="$(find ugv_description)/urdf/ugv.xacro"/>
+  <xacro:ugv />
+
+
+  <gazebo reference="base_link">
+    <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <update_rate>50</update_rate>
+      <left_joint>joint_wheel_left_0</left_joint>      
+      <right_joint>joint_wheel_right_0</right_joint>
+      <wheel_separation>0.9</wheel_separation>
+      <wheel_diameter>0.2</wheel_diameter>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <odometry_topic>odom</odometry_topic>
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_footprint</robot_base_frame>
+    </plugin>
+  </gazebo>
+
+  
+  <gazebo reference="lidar_front">
+    <sensor name="front_lidar_sensor" type="gpu_ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.047</min_angle>
+            <max_angle>1.047</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="front_lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+        <topicName>/lidar_front/scan</topicName>
+        <frameName>lidar_front</frameName>
+        <update_rate>10.0</update_rate>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+ 
+  <gazebo reference="lidar_back">
+    <sensor name="rear_lidar_sensor" type="gpu_ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.047</min_angle>
+            <max_angle>1.047</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="rear_lidar_plugin" filename="libgazebo_ros_ray_sensor.so">
+        <topicName>/lidar_back/scan</topicName>
+        <frameName>lidar_back</frameName>
+        <update_rate>10.0</update_rate>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+  <gazebo reference="camera_front">
+    <sensor name="camera_sensor_front" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <plugin name="camera_controller_front" filename="libgazebo_ros_camera.so">
+        <frame_name>camera_front</frame_name>
+        <image_topic_name>/camera_front/image_raw</image_topic_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+
+  <gazebo reference="camera_back">
+    <sensor name="camera_sensor_back" type="camera">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10.0</update_rate>
+      <plugin name="camera_controller_back" filename="libgazebo_ros_camera.so">
+        <frame_name>camera_back</frame_name>
+        <image_topic_name>/camera_back/image_raw</image_topic_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
